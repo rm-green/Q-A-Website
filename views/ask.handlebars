@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Ask a question</title>
+		<meta name="description" content="form to ask a new question">
+		<meta name="author" content="Rob Green">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="{{host}}/scripts/ask.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>Ask a Question</h1>
+			<a href="/" >Home</a>
+		</header>
+		<main>
+			<form action="/ask/ask" method="post" enctype="multipart/form-data">
+			<input type="text" id="title" name="title" placeholder="Question Title (max 128 characters)" maxlength="128" required><br />
+			<textarea type="text" id="summary" name="summary" placeholder="Question Summary (max 250 characters)" maxlength="250" required></textarea><br />
+			<textarea type="text" id="details" name="details" placeholder="Question details" required></textarea><br />
+			<p><label for="image">Select an image to upload</label></p><br />
+			<input type="file" class="custom-file-upload" name="image" accept="image/*"><br />
+			<input type="hidden" name="referrer" value="{{referrer}}">
+			<input type="submit" value="Submit question">
+			</form>
+		</main>
+	</body>
+</html>

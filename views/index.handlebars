@@ -1,0 +1,44 @@
+
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Home Page</title>
+		<meta name="description" content="form to add new books">
+		<meta name="author" content="Mark Tyers">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="{{host}}/scripts/main.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>Home</h1>
+			{{#if authorised}}
+				<a href="/logout">Log out</a>
+				<a href="/ask">Ask a Question</a>
+			{{else}}
+				<a href="/login">Log in</a>
+			{{/if}}
+		</header>
+		{{#if msg}}
+ 			<aside>
+				<p class="msg">{{msg}}</p>
+			</aside>
+		{{/if}}
+	<main>
+		<section class="questions">
+			{{#each questions}}
+			<a href="/{{this._id}}">
+			<article class="question">
+				<h4>Status: {{this.answered}}</h4>
+				<h1>{{this.title}}</h1>
+				<p>{{this.summary}}</p>
+				<h3>Asked by: {{this.author}}</h3>
+				<h4>Asked: {{this.date}}</h4>
+			</article>
+			</a>
+			{{/each}}
+		</section>
+	</main>
+	</body>
+</html>

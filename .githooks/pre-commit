@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -e # using the options command to abort script at first error
+echo
+echo "PRE-COMMIT"
+
+# see if the user is trying to merge a branch into master
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [[ $2 == 'merge' ]]; then
+	echo "merging branch"
+	if [[ "$branch" == "master" ]]; then
+		echo "  trying to merge into the 'master' branch"
+		echo "  you should push the local branch to GitHub"
+		echo "  and merge to master using a pull request"
+		echo
+		exit 1
+	fi
+fi
+
+# see if the user is trying to commit to the master branch
+if [ "$branch" = "master" ]; then
+	read -p "  You are about to commit to the master branch, are you sure? [y|n] " -n 1 -r < /dev/tty
+	echo
+	if echo $REPLY | grep -E '^[Yy]$' > /dev/null
+	then
+		exit 0 # commit will execute
+	fi
+	exit 1 # commit will not execute
+fi
+
+#Run the linter and exit if any linting errors are found (warnings don't count)
+./node_modules/.bin/eslint .
+if [[ "$?" == 0 ]]
+then
+	echo "Linting passed"
+else
+	echo "Linting problems detected - please resolve"
+	exit 1
+fi
+
+#Run the test suites and stop the commit if any don't pass
+npm test
+if [[ "$?" == 0 ]]
+then
+	echo "Testing passed"
+else
+	echo "All tests did not pass"
+	exit 1
+fi

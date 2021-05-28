@@ -1,0 +1,65 @@
+<!doctype html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Ask a question</title>
+		<meta name="description" content="form to ask a new question">
+		<meta name="author" content="Rob Green">
+		<link href="{{host}}/style.css" type="text/css" rel="stylesheet" />
+		<script type="module" src="{{host}}/scripts/question.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>Answer a Question</h1>
+			<a href="/" >Home</a>
+		</header>
+		<main>
+			<div id="question">
+				<p id="author">Asked by: {{data.question.author}}</p>
+				<p id="date">Date asked: {{data.question.date}}</p>
+				<h1 id="title">{{data.question.title}}</h1>
+				<h3 id="summary">{{data.question.summary}}</h3>
+				<p id="details">{{data.question.details}}</p>
+				<img src="{{data.question.image}}">
+				<p id="status">{{data.question.answered}}</p>
+			</div>
+			
+			{{#if authorised}}
+			<div id="answerBox">
+				<h2 id="answerHeading">Submit an answer</h2>
+				<form action="/answer" method="post" enctype="multipart/form-data">
+				<textarea type="text" id="details" name="details" placeholder="Please submit your answer here" required></textarea><br />
+				<input type="hidden" name="id" value={{data.id}}>
+				<input type="submit" value="Submit answer">
+				</form>
+			</div>
+			{{/if}}
+
+			<div id="answerList">
+				{{#if data.myQuestion}}
+					{{#each data.answers}}
+						<article id="answer" {{#if this.flaggedAsCorrect}} class="flagged" {{/if}}>
+							<form action="/answer/mark" method="post">
+								<input type="hidden" name="questionId" value={{this.questionId}}>
+								<input type="hidden" name="answerId" value={{this._id}}>
+								<input type="submit" value="Mark as correct">
+							</form>
+							<p>{{this.text}}</p>
+							<p id="author">Submitted by: {{this.author}}</p>
+							<p id="date">{{this.date}}</p>
+						</article>
+					{{/each}}
+				{{else}}
+					{{#each data.answers}}
+						<article id="answer">
+							<p>{{this.text}}</p>
+							<p id="author">Submitted by: {{this.author}}</p>
+							<p id="date">{{this.date}}</p>
+						</article>
+					{{/each}}
+				{{/if}}
+			</div>
+		</main>
+	</body>
+</html>
